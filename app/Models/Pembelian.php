@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Pembelian extends Model
+{
+    use HasFactory;
+
+    protected $table = 'pembelian';
+    protected $primaryKey = 'id';
+    protected $guarded = [];
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class, 'id_supplier', 'id_supplier');
+    }
+
+    public function bahan()
+    {
+        return $this->belongsTo(Material::class, 'id_material', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id');
+    }
+}
