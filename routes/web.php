@@ -14,6 +14,7 @@ use App\Http\Controllers\{
     SettingController,
     SupplierController,
     UserController,
+    PesananController,
 };
 use Illuminate\Support\Facades\Route;
 
@@ -48,6 +49,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan.index');
         Route::get('/penjualan/{id}', [PenjualanController::class, 'show'])->name('penjualan.show');
         Route::delete('/penjualan/{id}', [PenjualanController::class, 'destroy'])->name('penjualan.destroy');
+        Route::get('/penjualan/laporan/pdf', [PenjualanController::class, 'exportPDF'])->name('penjualan.export_pdf');
     });
 
     Route::group(['middleware' => 'level:1,2'], function () {
@@ -64,6 +66,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::get('/transaksi/baru', [PenjualanController::class, 'create'])->name('transaksi.baru');
         Route::post('/transaksi/simpan', [PenjualanController::class, 'store'])->name('transaksi.simpan');
+        Route::get('/transaksi/edit/{id}', [PenjualanController::class, 'edit'])->name('transaksi.edit');
         Route::get('/transaksi/selesai', [PenjualanController::class, 'selesai'])->name('transaksi.selesai');
         Route::get('/transaksi/nota-kecil', [PenjualanController::class, 'notaKecil'])->name('transaksi.nota_kecil');
         Route::get('/transaksi/nota-besar', [PenjualanController::class, 'notaBesar'])->name('transaksi.nota_besar');
@@ -91,5 +94,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'level:1,2'], function () {
         Route::get('/profil', [UserController::class, 'profil'])->name('user.profil');
         Route::post('/profil', [UserController::class, 'updateProfil'])->name('user.update_profil');
+    });
+
+    Route::group(['middleware' => 'level:3'], function() {
+        Route::get('/history-pesanan', [PesananController::class, 'history'])->name('pesanan.history');
+        Route::get('/history-pesanan/data', [PesananController::class, 'historyData'])->name('pesanan.datahistory');
+        Route::get('/pesanan-terbaru', [PesananController::class, 'baru'])->name('pesanan.baru');
+        Route::get('/detail-pesanan/{id}', [PesananController::class, 'detail'])->name('pesanan.detail');
+        Route::get('/pesanan-terbaru/data', [PesananController::class, 'data'])->name('pesanan.data');
+        Route::get('/pesanan-terbaru/status/{id}', [PesananController::class, 'updateStatus'])->name('pesanan.status');
     });
 });

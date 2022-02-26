@@ -49,7 +49,7 @@
                             <div class="col-lg-2">
                                 <div class="input-group">
                                     <input type="hidden" name="id_penjualan" id="id_penjualan"
-                                        value="{{ $id_penjualan }}">
+                                        value="{{ $penjualan->id }}">
                                     <input type="hidden" name="id" id="id">
                                     <span class="input-group-btn">
                                         <button onclick="tampilProduk()" class="btn btn-info btn-flat" type="button"><i
@@ -81,7 +81,7 @@
                         <div class="col-lg-4">
                             <form action="{{ route('transaksi.simpan') }}" class="form-penjualan" method="post">
                                 @csrf
-                                <input type="hidden" name="id_penjualan" value="{{ $id_penjualan }}">
+                                <input type="hidden" name="id_penjualan" value="{{ $penjualan->id }}">
                                 <input type="hidden" name="total" id="total">
                                 <input type="hidden" name="total_item" id="total_item">
                                 <input type="hidden" name="bayar" id="bayar">
@@ -89,13 +89,13 @@
                                 <div class="form-group row">
                                     <label for="nama_customer" class="col-lg-4 control-label">Nama Customer</label>
                                     <div class="col-lg-6">
-                                        <input type="text" id="nama_customer" name="nama_customer" class="form-control">
+                                        <input type="text" id="nama_customer" name="nama_customer" class="form-control" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="nomor_meja" class="col-lg-4 control-label">No. Meja</label>
                                     <div class="col-lg-6">
-                                        <input type="text" id="nomor_meja" name="nomor_meja" class="form-control">
+                                        <input type="text" id="nomor_meja" name="nomor_meja" class="form-control" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -159,7 +159,7 @@
                     processing: true,
                     autoWidth: false,
                     ajax: {
-                        url: '{{ route('transaksi.data', $id_penjualan) }}',
+                        url: '{{ route('transaksi.data', $penjualan->id) }}',
                     },
                     columns: [{
                             data: 'DT_RowIndex',

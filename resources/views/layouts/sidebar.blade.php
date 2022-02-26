@@ -63,12 +63,12 @@
                 </li>
                 @endforeach
                 @endif --}}
-                <li class="header">REPORT</li>
+                {{-- <li class="header">REPORT</li>
                 <li>
                     <a href="{{ route('laporan.index') }}">
                         <i class="fa fa-file-pdf-o"></i> <span>Laporan</span>
                     </a>
-                </li>
+                </li> --}}
                 <li class="header">SYSTEM</li>
                 <li>
                     <a href="{{ route('user.index') }}">
@@ -80,7 +80,7 @@
                         <i class="fa fa-cogs"></i> <span>Pengaturan</span>
                     </a>
                 </li>
-            @else
+            @elseif(auth()->user()->level == 2)
                 {{-- <li>
                 <a href="{{ route('transaksi.index') }}">
                     <i class="fa fa-cart-arrow-down"></i> <span>Transaksi Aktif</span>
@@ -96,6 +96,17 @@
                         <i class="fa fa-cart-arrow-down"></i> <span>Transaksi Baru</span>
                     </a>
                 </li>
+            @else
+            <li>
+                <a href="{{ route('pesanan.baru') }}">
+                    <i class="fa fa-cart-arrow-down"></i> <span>Pesanan Terbaru</span>
+                </a>
+            </li> 
+            <li>
+                <a href="{{ route('pesanan.history') }}">
+                    <i class="fa fa-cart-arrow-down"></i> <span>History Pesanan</span>
+                </a>
+            </li>
             @endif
         </ul>
     </section>

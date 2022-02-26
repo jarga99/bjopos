@@ -67,6 +67,14 @@
         </tbody>
         <tfoot>
             <tr>
+                <td colspan="6" class="text-right"><b>Nama Customer</b></td>
+                <td class="text-right"><b>{{ $penjualan->nama_customer }}</b></td>
+            </tr>
+            <tr>
+                <td colspan="6" class="text-right"><b>No. Meja</b></td>
+                <td class="text-right"><b>{{ {{ $penjualan->nomor_meja }} }} %</b></td>
+            </tr>
+            <tr>
                 <td colspan="6" class="text-right"><b>Total Harga</b></td>
                 <td class="text-right"><b>{{ format_uang($penjualan->total_harga) }}</b></td>
             </tr>

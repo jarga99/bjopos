@@ -15,12 +15,14 @@ class BuatPenjualanTable extends Migration
     {
         Schema::create('penjualan', function (Blueprint $table) {
             $table->id();
+            $table->string('nama_customer')->nullable();
+            $table->string('nomor_meja')->nullable();
             $table->integer('total_item');
             $table->integer('total_harga');
             $table->integer('diskon');
             $table->integer('bayar');
             $table->integer('diterima');
-            $table->enum('status', ['disimpan', 'belum disimpan'])->default('belum disimpan');
+            $table->integer('status')->nullable();
             $table->unsignedBigInteger('id_user');
             $table->foreign('id_user')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();

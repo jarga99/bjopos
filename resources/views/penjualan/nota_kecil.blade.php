@@ -71,6 +71,17 @@
 
     <br>
     <table width="100%" style="border: 0;">
+        <tr>
+            <td>Nama Customer:</td>
+            <td class="text-right">{{ $penjualan->nama_customer }}</td>
+        </tr>
+        <tr>
+            <td>No. Meja:</td>
+            <td class="text-right">{{ $penjualan->nomor_meja }}</td>
+        </tr>
+    </table>
+    <p class="text-center">-----------------------------------</p>
+    <table width="100%" style="border: 0;">
         @foreach ($detail as $item)
             <tr>
                 <td colspan="3">{{ $item->goods_master->produk->nama_produk }}</td>

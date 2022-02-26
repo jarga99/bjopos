@@ -23,4 +23,11 @@ class Penjualan extends Model
     {
         return $this->hasOne(PenjualanDetail::class, 'id_penjualan', 'id_penjualan');
     }
+
+    public function toggleStatus()
+    {
+        $this->status = !$this->status;
+        return $this;
+    }
+    
 }
