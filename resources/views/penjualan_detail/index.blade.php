@@ -81,6 +81,7 @@
                         <div class="col-lg-4">
                             <form action="{{ route('transaksi.simpan') }}" class="form-penjualan" method="post">
                                 @csrf
+                                <input type="hidden" name="edit" value="1">
                                 <input type="hidden" name="id_penjualan" value="{{ $id_penjualan }}">
                                 <input type="hidden" name="total" id="total">
                                 <input type="hidden" name="total_item" id="total_item">
@@ -89,13 +90,13 @@
                                 <div class="form-group row">
                                     <label for="nama_customer" class="col-lg-4 control-label">Nama Customer</label>
                                     <div class="col-lg-6">
-                                        <input type="text" id="nama_customer" name="nama_customer" class="form-control">
+                                        <input type="text" id="nama_customer" name="nama_customer" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="nomor_meja" class="col-lg-4 control-label">No. Meja</label>
                                     <div class="col-lg-6">
-                                        <input type="text" id="nomor_meja" name="nomor_meja" class="form-control">
+                                        <input type="text" id="nomor_meja" name="nomor_meja" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">

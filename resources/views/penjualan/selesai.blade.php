@@ -26,7 +26,6 @@
                 <button class="btn btn-warning btn-flat" onclick="notaBesar('{{ route('transaksi.nota_besar') }}', 'Nota PDF')">Cetak Ulang Nota</button>
                 @endif
                 <a href="{{ route('transaksi.baru') }}" class="btn btn-primary btn-flat">Transaksi Baru</a>
-                <a href="{{ route('transaksi.edit', ['id' => $penjualan->id]) }}" class="btn btn-danger btn-flat">Edit Transaksi</a>
             </div>
         </div>
     </div>

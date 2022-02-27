@@ -24,6 +24,12 @@ class Penjualan extends Model
         return $this->hasOne(PenjualanDetail::class, 'id_penjualan', 'id_penjualan');
     }
 
+    public function detail()
+    {
+        return $this->hasMany(PenjualanDetail::class, 'id_penjualan', 'id');
+    }
+    
+
     public function toggleStatus()
     {
         $this->status = !$this->status;

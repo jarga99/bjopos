@@ -7,6 +7,16 @@
     <title>Laporan Penjualan</title>
 
     <link rel="stylesheet" href="{{ asset('/AdminLTE-2/bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
+    <style>
+        .detail td {
+            font-style: italic;
+            font-weight: 600;
+        }
+        .item td {
+            border-top: 2px solid #333 !important;
+            border-bottom: 2px solid #333 !important;
+        }
+    </style>
 </head>
 <body>
     <h3 class="text-center">Laporan Penjualan</h3>
@@ -19,7 +29,6 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th width="5%">No</th>
                 <th>Tanggal</th>
                 <th>Nama Customer</th>
                 <th>Total Item</th>
@@ -29,14 +38,33 @@
         </thead>
         <tbody>
             @foreach ($data as $item)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ tanggal_indonesia($item->created_at, false) }}</td>
-                    <td>{{ $item->nama_customer }}</td>
-                    <td>{{ format_uang($item->total_item) }}</td>
-                    <td>{{ 'Rp. '. format_uang($item->total_harga) }}</td>
-                    <td>{{ $item->user->name ?? '' }}</td>
-                </tr>
+                @if ($item->nama_customer != null)
+                    <tr class="item">
+                        <td>{{ tanggal_indonesia($item->created_at, false) }}</td>
+                        <td>{{ $item->nama_customer }}</td>
+                        <td>{{ format_uang($item->total_item) }}</td>
+                        <td>{{ 'Rp. '. format_uang($item->total_harga) }}</td>
+                        <td>{{ $item->user->name ?? '' }}</td>
+                    </tr>
+                    @if ($item->detail)
+                        <tr >
+                            <td>No</td>
+                            <td>Kode Produk</td>
+                            <td>Nama Produk</td>
+                            <td>Jumlah</td>
+                            <td>Subtotal</td>
+                        </tr>
+                        @foreach ($item->detail as $detail)
+                            <tr class="detail">
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $detail->produk->kode_produk }}</td>
+                                <td>{{ $detail->produk->nama_produk }}</td>
+                                <td>{{ $detail->jumlah }}</td>
+                                <td>{{ 'Rp. '. format_uang($detail->subtotal) }}</td>
+                            </tr>
+                        @endforeach
+                    @endif
+                @endif
             @endforeach
         </tbody>
     </table>

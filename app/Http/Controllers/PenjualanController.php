@@ -31,7 +31,7 @@ class PenjualanController extends Controller
 
     public function data(Request $request)
     {
-        $penjualan = Penjualan::orderBy('id', 'desc');
+        $penjualan = Penjualan::where('nama_customer', '!=', '')->orderBy('id', 'desc');
 
         if($request->tanggal_awal != null && $request->tanggal_akhir != null) {
             $penjualan = $penjualan->whereBetween('created_at', [$request->tanggal_awal, $request->tanggal_akhir]);
@@ -57,6 +57,17 @@ class PenjualanController extends Controller
             ->addColumn('tanggal', function ($penjualan) {
                 return tanggal_indonesia($penjualan->created_at, false);
             })
+            ->addColumn('status', function($penjualan) {
+                if($penjualan->status == 0) {
+                    $status = '<span class="text-danger">Canceled</span>';
+                } elseif($penjualan->status == 1) {
+                    $status = '<span class="text-success">Success</span>';
+                } elseif($penjualan->status == 2) {
+                    $status = '<span class="text-warning">Edited</span>';
+                }
+
+                return $status;
+            })
             // ->addColumn('kode_member', function ($penjualan) {
             //     $member = $penjualan->member->kode_member ?? '';
             //     return '<span class="label label-success">'. $member .'</spa>';
@@ -71,11 +82,12 @@ class PenjualanController extends Controller
                 return '
                 <div class="btn">
                     <button onclick="showDetail(`'. route('penjualan.show', $penjualan->id) .'`)" class="btn btn-xs btn-info btn-flat"><i class="fa fa-eye"></i></button>
+                    <a href="'. route('transaksi.edit', $penjualan->id) .'" class="btn btn-xs btn-warning btn-flat"><i class="fa fa-pencil"></i></a>
                     <button onclick="deleteData(`'. route('penjualan.destroy', $penjualan->id) .'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button>
                 </div>
                 ';
             })
-            ->rawColumns(['aksi']) //, 'kode_member'  jika ingin menambakan code member
+            ->rawColumns(['aksi', 'status']) //, 'kode_member'  jika ingin menambakan code member
             ->make(true);
     }
 
@@ -115,7 +127,12 @@ class PenjualanController extends Controller
         $penjualan->diskon = $request->diskon;
         $penjualan->bayar = $request->bayar;
         $penjualan->diterima = $request->diterima;
-        $penjualan->status = 0;
+        if($request->edit == 1) {
+            $status = 1;
+        } elseif($request->edit == 2) {
+            $status = 2;
+        }
+        $penjualan->status = $status;
         $penjualan->update();
 
         $detail = PenjualanDetail::where('id_penjualan', $penjualan->id)->get();
@@ -245,7 +262,7 @@ class PenjualanController extends Controller
     {
         $awal = $request->form_awal;
         $akhir = $request->form_akhir;
-        $data = Penjualan::whereBetween('created_at', [$awal, $akhir])->get();
+        $data = Penjualan::with('detail.produk')->whereBetween('created_at', [$awal, $akhir])->get();
         $pdf  = PDF::loadView('penjualan.pdf', compact('awal', 'akhir', 'data'));
         $pdf->setPaper('a4', 'potrait');
 

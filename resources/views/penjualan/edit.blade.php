@@ -81,6 +81,7 @@
                         <div class="col-lg-4">
                             <form action="{{ route('transaksi.simpan') }}" class="form-penjualan" method="post">
                                 @csrf
+                                <input type="hidden" name="edit" value="2">
                                 <input type="hidden" name="id_penjualan" value="{{ $penjualan->id }}">
                                 <input type="hidden" name="total" id="total">
                                 <input type="hidden" name="total_item" id="total_item">

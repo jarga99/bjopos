@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    Daftar Penjualan
+    Daftar Penjualan {{ \Carbon\Carbon::parse($tanggalAwal)->format('d F Y') }} - {{ \Carbon\Carbon::parse($tanggalAkhir)->format('d F Y') }}
 @endsection
 
 @push('css')
@@ -39,6 +39,7 @@
                         {{-- <th>Total Harga</th> --}}
                         {{-- <th>Diskon</th> --}}
                         <th>Total Bayar</th>
+                        <th>Status</th>
                         <th>Kasir</th>
                         <th width="15%"><i class="fa fa-cog"></i></th>
                     </thead>
@@ -76,19 +77,23 @@
                 // {data: 'total_harga'},
                 // {data: 'diskon'},
                 {data: 'bayar'},
+                {data: 'status'},
                 {data: 'kasir'},
                 {data: 'aksi', searchable: false, sortable: false},
             ]
         });
 
         $('#btn-search').on('click', function(e) {
-            var tanggal_awal = $('#tanggal_awal').val();
-            var tanggal_akhir = $('#tanggal_akhir').val();
+            const months = ["January", "February", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            var tanggal_awal = new Date($('#tanggal_awal').val()).getDate() + ' ' + months[new Date($('#tanggal_awal').val()).getMonth()] + ' ' + new Date($('#tanggal_awal').val()).getFullYear();
+            var tanggal_akhir = new Date($('#tanggal_akhir').val()).getDate() + ' ' + months[new Date($('#tanggal_akhir').val()).getMonth()] + ' ' + new Date($('#tanggal_akhir').val()).getFullYear();
+            var content_title = `Daftar Penjualan ` + tanggal_awal + ` - ` + tanggal_akhir;
             table.draw();
             e.preventDefault();
             $('#modal-form').modal("hide");
             $('#form_awal').val($('#tanggal_awal').val());
             $('#form_akhir').val($('#tanggal_akhir').val());
+            $('#content-title').html(content_title);
         });
     })
 </script>
