@@ -4,6 +4,26 @@
     History Pesanan
 @endsection
 
+@push('css')
+    <style>
+        .fw7 {
+            font-weight: 700;
+        }
+        .fsi {
+            font-style: italic;
+        }
+        .text-success {
+            color: #28a745 !important;
+        }
+        .text-warning {
+            color: #ffc107 !important;
+        }
+        .text-danger {
+            color: #dc3545 !important;
+        }
+    </style>
+@endpush
+
 @section('breadcrumb')
     @parent
     <li class="active">History Pesanan</li>
@@ -24,6 +44,7 @@
                         {{-- <th>Total Harga</th> --}}
                         {{-- <th>Diskon</th> --}}
                         <th>Total Bayar</th>
+                        <th>Status</th>
                         <th>Kasir</th>
                         <th width="15%"><i class="fa fa-cog"></i></th>
                     </thead>
@@ -56,6 +77,7 @@
                 // {data: 'total_harga'},
                 // {data: 'diskon'},
                 {data: 'bayar'},
+                {data: 'status'},
                 {data: 'kasir'},
                 {data: 'aksi', searchable: false, sortable: false},
             ]

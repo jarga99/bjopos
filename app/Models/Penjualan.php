@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Penjualan extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'penjualan';
     protected $primaryKey = 'id';
@@ -27,13 +28,6 @@ class Penjualan extends Model
     public function detail()
     {
         return $this->hasMany(PenjualanDetail::class, 'id_penjualan', 'id');
-    }
-    
-
-    public function toggleStatus()
-    {
-        $this->status = !$this->status;
-        return $this;
     }
     
 }

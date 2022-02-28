@@ -15,7 +15,7 @@ class PesananController extends Controller
 
     public function data()
     {
-        $penjualan = Penjualan::orderBy('id', 'desc')->where('status', 0)->get();
+        $penjualan = Penjualan::withTrashed()->where('nama_customer', '!=', '')->orderBy('id', 'desc')->where('status', '!=', 3)->get();
 
         return datatables()
             ->of($penjualan)
@@ -39,18 +39,34 @@ class PesananController extends Controller
             // ->editColumn('diskon', function ($penjualan) {
             //     return $penjualan->diskon . '%';
             // })
+            ->addColumn('status', function($penjualan) {
+                if($penjualan->status == 1) {
+                    $status = '<span class="text-success fw7 fsi">Success</span>';
+                } elseif($penjualan->status == 2) {
+                    $status = '<span class="text-warning fw7 fsi">Edited</span>';
+                } elseif($penjualan->status == 3) {
+                    $status = '<span class="text-danger fw7 fsi">Canceled</span>';
+                } 
+
+                return $status;
+            })
             ->editColumn('kasir', function ($penjualan) {
                 return $penjualan->user->name ?? '';
             })
             ->addColumn('aksi', function ($penjualan) {
                 $url = route('pesanan.status', ['id' => $penjualan->id]);
+                if($penjualan->status != 1) {
+                    $update = '<a href="'.$url.'" class="btn btn-xs btn-success btn-flat"><i class="fa fa-check"></i></a>';
+                } else {
+                    $update = '';
+                }
                 $html = '<div class="btn">
-                <button onclick="showDetail(`'. route('pesanan.detail', $penjualan->id) .'`)" class="btn btn-xs btn-info btn-flat"><i class="fa fa-eye"></i></button>
-                <a href="'.$url.'" class="btn btn-xs btn-success btn-flat"><i class="fa fa-check"></i></a>
-            </div>';
-            return $html;
+                        <button onclick="showDetail(`'. route('pesanan.detail', $penjualan->id) .'`)" class="btn btn-xs btn-info btn-flat"><i class="fa fa-eye"></i></button>
+                        '. $update .'
+                    </div>';
+                return $html;
             })
-            ->rawColumns(['aksi']) //, 'kode_member'  jika ingin menambakan code member
+            ->rawColumns(['aksi', 'status']) //, 'kode_member'  jika ingin menambakan code member
             ->make(true);
     }
 
@@ -61,7 +77,7 @@ class PesananController extends Controller
 
     public function historyData()
     {
-        $penjualan = Penjualan::orderBy('id', 'desc')->get();
+        $penjualan = Penjualan::withTrashed()->where('nama_customer', '!=', '')->orderBy('id', 'desc')->get();
 
         return datatables()
             ->of($penjualan)
@@ -85,6 +101,17 @@ class PesananController extends Controller
             // ->editColumn('diskon', function ($penjualan) {
             //     return $penjualan->diskon . '%';
             // })
+            ->addColumn('status', function($penjualan) {
+                if($penjualan->status == 1) {
+                    $status = '<span class="text-success fw7 fsi">Success</span>';
+                } elseif($penjualan->status == 2) {
+                    $status = '<span class="text-warning fw7 fsi">Edited</span>';
+                } elseif($penjualan->status == 3) {
+                    $status = '<span class="text-danger fw7 fsi">Canceled</span>';
+                } 
+
+                return $status;
+            })
             ->editColumn('kasir', function ($penjualan) {
                 return $penjualan->user->name ?? '';
             })
@@ -94,18 +121,16 @@ class PesananController extends Controller
             </div>';
             return $html;
             })
-            ->rawColumns(['aksi']) //, 'kode_member'  jika ingin menambakan code member
+            ->rawColumns(['aksi', 'status']) //, 'kode_member'  jika ingin menambakan code member
             ->make(true);
     }
 
     public function updateStatus($id)
     {
-        $penjualan = Penjualan::where('id', $id)->first();
-        if ($penjualan) {
-            $penjualan->toggleStatus()->save();
-            return redirect()->back()->with(['success' => "Change Status Success"]);
-        }
-        return redirect()->back()->with(['error' => "Change Status Failed"]);
+        Penjualan::where('id', $id)->update([
+            'status' => 1
+        ]);
+        return redirect()->back()->with(['success' => "Change Status Success"]);
     }
 
     public function detail($id)

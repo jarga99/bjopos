@@ -6,6 +6,23 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('/AdminLTE-2/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
+    <style>
+        .fw7 {
+            font-weight: 700;
+        }
+        .fsi {
+            font-style: italic;
+        }
+        .text-success {
+            color: #28a745 !important;
+        }
+        .text-warning {
+            color: #ffc107 !important;
+        }
+        .text-danger {
+            color: #dc3545 !important;
+        }
+    </style>
 @endpush
 
 @section('breadcrumb')
@@ -56,8 +73,9 @@
 @push('scripts')
 <script src="{{ asset('/AdminLTE-2/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
 <script>
+    let table;
     $(document).ready(function() {
-        var table = $('.table-penjualan').DataTable({
+        table = $('.table-penjualan').DataTable({
             processing: true,
             serverSide: true,
             autoWidth: false,
@@ -95,7 +113,23 @@
             $('#form_akhir').val($('#tanggal_akhir').val());
             $('#content-title').html(content_title);
         });
-    })
+    });
+
+    function deleteData(url) {
+        if (confirm('Yakin ingin menghapus data terpilih?')) {
+            $.post(url, {
+                    '_token': $('[name=csrf-token]').attr('content'),
+                    '_method': 'delete'
+                })
+                .done((response) => {
+                    table.ajax.reload();
+                })
+                .fail((errors) => {
+                    alert('Tidak dapat menghapus data');
+                    return;
+                });
+        }
+    }
 </script>
 <script>
     let table1;
@@ -121,22 +155,6 @@
 
         table1.ajax.url(url);
         table1.ajax.reload();
-    }
-
-    function deleteData(url) {
-        if (confirm('Yakin ingin menghapus data terpilih?')) {
-            $.post(url, {
-                    '_token': $('[name=csrf-token]').attr('content'),
-                    '_method': 'delete'
-                })
-                .done((response) => {
-                    table.ajax.reload();
-                })
-                .fail((errors) => {
-                    alert('Tidak dapat menghapus data');
-                    return;
-                });
-        }
     }
 
     function updatePeriode() {

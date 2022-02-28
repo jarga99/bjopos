@@ -4,6 +4,26 @@
     Pesanan Terbaru
 @endsection
 
+@push('css')
+    <style>
+        .fw7 {
+            font-weight: 700;
+        }
+        .fsi {
+            font-style: italic;
+        }
+        .text-success {
+            color: #28a745 !important;
+        }
+        .text-warning {
+            color: #ffc107 !important;
+        }
+        .text-danger {
+            color: #dc3545 !important;
+        }
+    </style>
+@endpush
+
 @section('breadcrumb')
     @parent
     <li class="active">Pesanan Terbaru</li>
@@ -18,12 +38,14 @@
                     <thead>
                         <th width="5%">No</th>
                         <th>Tanggal</th>
+                        <th>No Meja</th>
                         <th>Nama Customer</th>
                         {{-- <th>Kode Member</th> --}}
                         <th>Total Item</th>
                         {{-- <th>Total Harga</th> --}}
                         {{-- <th>Diskon</th> --}}
                         <th>Total Bayar</th>
+                        <th>Status</th>
                         <th>Kasir</th>
                         <th width="15%"><i class="fa fa-cog"></i></th>
                     </thead>
@@ -50,12 +72,14 @@
             columns: [
                 {data: 'DT_RowIndex', searchable: false, sortable: false},
                 {data: 'tanggal'},
+                {data: 'nomor_meja'},
                 {data: 'nama_customer'},
                 // {data: 'kode_member'},
                 {data: 'total_item'},
                 // {data: 'total_harga'},
                 // {data: 'diskon'},
                 {data: 'bayar'},
+                {data: 'status'},
                 {data: 'kasir'},
                 {data: 'aksi', searchable: false, sortable: false},
             ]

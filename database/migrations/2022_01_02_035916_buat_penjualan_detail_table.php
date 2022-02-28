@@ -24,6 +24,7 @@ class BuatPenjualanDetailTable extends Migration
             $table->integer('jumlah');
             $table->integer('diskon');
             $table->integer('subtotal');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

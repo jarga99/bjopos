@@ -28,7 +28,6 @@
                 padding-top: 5px;
             }
         }
-
     </style>
 @endpush
 
@@ -60,6 +59,18 @@
                         </div>
                     </form>
 
+                    @if ($errors->any())
+                        @foreach ($errors->all() as $error)
+                        <div class="alert alert-danger d-flex align-items-center justify-content-between" role="alert">
+                            <div class="flex-grow-1 me-3">
+                                <p class="mb-0">
+                                    {{ $error }}
+                                </p>
+                            </div>
+                        </div>
+                        @endforeach
+                    @endif
+
                     <table class="table table-stiped table-bordered table-penjualan">
                         <thead>
                             <th width="5%">No</th>
@@ -90,13 +101,13 @@
                                 <div class="form-group row">
                                     <label for="nama_customer" class="col-lg-4 control-label">Nama Customer</label>
                                     <div class="col-lg-6">
-                                        <input type="text" id="nama_customer" name="nama_customer" class="form-control" readonly>
+                                        <input type="text" id="nama_customer" name="nama_customer" class="form-control" value="{{ $penjualan->nama_customer }}" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="nomor_meja" class="col-lg-4 control-label">No. Meja</label>
                                     <div class="col-lg-6">
-                                        <input type="text" id="nomor_meja" name="nomor_meja" class="form-control" readonly>
+                                        <input type="text" id="nomor_meja" name="nomor_meja" class="form-control" value="{{ $penjualan->nomor_meja }}" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -333,6 +344,7 @@
 
             $.get(`{{ url('/transaksi/loadform') }}/${diskon}/${$('.total').text()}/${diterima}`)
                 .done(response => {
+
                     $('#totalrp').val('Rp. ' + response.totalrp);
                     $('#bayarrp').val('Rp. ' + response.bayarrp);
                     $('#bayar').val(response.bayar);

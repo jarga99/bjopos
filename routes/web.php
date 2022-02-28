@@ -44,7 +44,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/produk/delete-selected', [ProdukController::class, 'deleteSelected'])->name('produk.delete_selected');
         Route::post('/produk/cetak-barcode', [ProdukController::class, 'cetakBarcode'])->name('produk.cetak_barcode');
         Route::resource('/produk', ProdukController::class);
+    });
 
+    Route::group(['middleware' => 'level:1,2'], function() {
         Route::get('/penjualan/data', [PenjualanController::class, 'data'])->name('penjualan.data');
         Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan.index');
         Route::get('/penjualan/{id}', [PenjualanController::class, 'show'])->name('penjualan.show');

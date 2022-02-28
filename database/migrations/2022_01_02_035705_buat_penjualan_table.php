@@ -22,9 +22,11 @@ class BuatPenjualanTable extends Migration
             $table->integer('diskon');
             $table->integer('bayar');
             $table->integer('diterima');
+            $table->integer('kembali');
             $table->integer('status')->nullable();
             $table->unsignedBigInteger('id_user');
             $table->foreign('id_user')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

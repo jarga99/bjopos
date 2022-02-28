@@ -13,6 +13,7 @@ use App\Models\Stock;
 use App\Models\Discount;
 use Illuminate\Support\Facades\Auth;
 use Session;
+use Illuminate\Support\Facades\Validator;
 
 class PenjualanController extends Controller
 {
@@ -31,7 +32,7 @@ class PenjualanController extends Controller
 
     public function data(Request $request)
     {
-        $penjualan = Penjualan::where('nama_customer', '!=', '')->orderBy('id', 'desc');
+        $penjualan = Penjualan::withTrashed()->where('nama_customer', '!=', '')->orderBy('id', 'desc');
 
         if($request->tanggal_awal != null && $request->tanggal_akhir != null) {
             $penjualan = $penjualan->whereBetween('created_at', [$request->tanggal_awal, $request->tanggal_akhir]);
@@ -58,13 +59,13 @@ class PenjualanController extends Controller
                 return tanggal_indonesia($penjualan->created_at, false);
             })
             ->addColumn('status', function($penjualan) {
-                if($penjualan->status == 0) {
-                    $status = '<span class="text-danger">Canceled</span>';
-                } elseif($penjualan->status == 1) {
-                    $status = '<span class="text-success">Success</span>';
+                if($penjualan->status == 1) {
+                    $status = '<span class="text-success fw7 fsi">Success</span>';
                 } elseif($penjualan->status == 2) {
-                    $status = '<span class="text-warning">Edited</span>';
-                }
+                    $status = '<span class="text-warning fw7 fsi">Edited</span>';
+                } elseif($penjualan->status == 3) {
+                    $status = '<span class="text-danger fw7 fsi">Canceled</span>';
+                } 
 
                 return $status;
             })
@@ -79,11 +80,19 @@ class PenjualanController extends Controller
                 return $penjualan->user->name ?? '';
             })
             ->addColumn('aksi', function ($penjualan) {
+                $detail = '<button onclick="showDetail(`'. route('penjualan.show', $penjualan->id) .'`)" class="btn btn-xs btn-info btn-flat"><i class="fa fa-eye"></i></button>';
+                if($penjualan->status == 1) {
+                    $edit = '<a href="'. route('transaksi.edit', $penjualan->id) .'" class="btn btn-xs btn-warning btn-flat"><i class="fa fa-pencil"></i></a>';
+                    $delete = '<button onclick="deleteData(`'. route('penjualan.destroy', $penjualan->id) .'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button>';
+                } else {
+                    $edit = '';
+                    $delete = '';
+                }
                 return '
                 <div class="btn">
-                    <button onclick="showDetail(`'. route('penjualan.show', $penjualan->id) .'`)" class="btn btn-xs btn-info btn-flat"><i class="fa fa-eye"></i></button>
-                    <a href="'. route('transaksi.edit', $penjualan->id) .'" class="btn btn-xs btn-warning btn-flat"><i class="fa fa-pencil"></i></a>
-                    <button onclick="deleteData(`'. route('penjualan.destroy', $penjualan->id) .'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button>
+                    '. $detail .'
+                    '. $edit .'
+                    '. $delete .'
                 </div>
                 ';
             })
@@ -103,6 +112,7 @@ class PenjualanController extends Controller
         // $penjualan->modal_product = 0;
         $penjualan->bayar = 0;
         $penjualan->diterima = 0;
+        $penjualan->kembali = 0;
         $penjualan->id_user = Auth::user()->id;
         $penjualan->save();
 
@@ -118,6 +128,18 @@ class PenjualanController extends Controller
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'nama_customer' => 'required',
+            'nomor_meja' => 'required'
+
+        ]);
+
+        if ($validator->fails()) {
+            return back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+
         $penjualan = Penjualan::findOrFail($request->id_penjualan);
         // $penjualan->id_member = $request->id_member;
         $penjualan->nama_customer = $request->nama_customer;
@@ -127,6 +149,7 @@ class PenjualanController extends Controller
         $penjualan->diskon = $request->diskon;
         $penjualan->bayar = $request->bayar;
         $penjualan->diterima = $request->diterima;
+        $penjualan->kembali = $request->kembali;
         if($request->edit == 1) {
             $status = 1;
         } elseif($request->edit == 2) {
@@ -195,7 +218,10 @@ class PenjualanController extends Controller
 
             $item->delete();
         }
-
+        if($penjualan) {
+            $penjualan->status = 3;
+            $penjualan->update();
+        }
         $penjualan->delete();
 
         return response(null, 204);

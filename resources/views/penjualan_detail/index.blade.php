@@ -60,6 +60,18 @@
                         </div>
                     </form>
 
+                    @if ($errors->any())
+                        @foreach ($errors->all() as $error)
+                        <div class="alert alert-danger d-flex align-items-center justify-content-between" role="alert">
+                            <div class="flex-grow-1 me-3">
+                                <p class="mb-0">
+                                    {{ $error }}
+                                </p>
+                            </div>
+                        </div>
+                        @endforeach
+                    @endif
+
                     <table class="table table-stiped table-bordered table-penjualan">
                         <thead>
                             <th width="5%">No</th>
