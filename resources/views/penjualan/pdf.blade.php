@@ -27,6 +27,31 @@
     </h4>
 
     <table class="table table-striped">
+        <tbody>
+            <tr>
+                <td>Jumlah Orderan</td>
+                <td>: {{ $total_orderan }}</td>
+            </tr>
+            <tr>
+                <td>Total Pemasukan Bersih</td>
+                <td>: {{ 'Rp. '. format_uang($pemasukan_bersih) }}</td>
+            </tr>
+            <tr>
+                <td>Total Pemasukan Kotor</td>
+                <td>: {{ 'Rp. '. format_uang($pemasukan_kotor) }}</td>
+            </tr>
+            <tr>
+                <td>Total Kembalian</td>
+                <td>: {{ 'Rp. '. format_uang($total_kembali) }}</td>
+            </tr>
+            <tr>
+                <td>Total Pembatalan Pesanan</td>
+                <td>: {{ 'Rp. '. format_uang($total_pembatalan) }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Tanggal</th>
@@ -37,33 +62,31 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($data as $item)
-                @if ($item->nama_customer != null)
-                    <tr class="item">
-                        <td>{{ tanggal_indonesia($item->created_at, false) }}</td>
-                        <td>{{ $item->nama_customer }}</td>
-                        <td>{{ format_uang($item->total_item) }}</td>
-                        <td>{{ 'Rp. '. format_uang($item->total_harga) }}</td>
-                        <td>{{ $item->user->name ?? '' }}</td>
+            @foreach ($penjualan as $item)
+                <tr class="item">
+                    <td>{{ tanggal_indonesia($item->created_at, false) }}</td>
+                    <td>{{ $item->nama_customer }}</td>
+                    <td>{{ format_uang($item->total_item) }}</td>
+                    <td>{{ 'Rp. '. format_uang($item->total_harga) }}</td>
+                    <td>{{ $item->user->name ?? '' }}</td>
+                </tr>
+                @if ($item->detail)
+                    <tr >
+                        <td>No</td>
+                        <td>Kode Produk</td>
+                        <td>Nama Produk</td>
+                        <td>Jumlah</td>
+                        <td>Subtotal</td>
                     </tr>
-                    @if ($item->detail)
-                        <tr >
-                            <td>No</td>
-                            <td>Kode Produk</td>
-                            <td>Nama Produk</td>
-                            <td>Jumlah</td>
-                            <td>Subtotal</td>
+                    @foreach ($item->detail as $detail)
+                        <tr class="detail">
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $detail->produk->kode_produk }}</td>
+                            <td>{{ $detail->produk->nama_produk }}</td>
+                            <td>{{ $detail->jumlah }}</td>
+                            <td>{{ 'Rp. '. format_uang($detail->subtotal) }}</td>
                         </tr>
-                        @foreach ($item->detail as $detail)
-                            <tr class="detail">
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $detail->produk->kode_produk }}</td>
-                                <td>{{ $detail->produk->nama_produk }}</td>
-                                <td>{{ $detail->jumlah }}</td>
-                                <td>{{ 'Rp. '. format_uang($detail->subtotal) }}</td>
-                            </tr>
-                        @endforeach
-                    @endif
+                    @endforeach
                 @endif
             @endforeach
         </tbody>

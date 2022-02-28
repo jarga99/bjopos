@@ -286,12 +286,21 @@ class PenjualanController extends Controller
 
     public function exportPDF(Request $request)
     {
-        $awal = $request->form_awal;
+        $awal = $request->form_awal;    
         $akhir = $request->form_akhir;
-        $data = Penjualan::with('detail.produk')->whereBetween('created_at', [$awal, $akhir])->get();
-        $pdf  = PDF::loadView('penjualan.pdf', compact('awal', 'akhir', 'data'));
+        $data = Penjualan::with('detail.produk')->where('nama_customer', '!=', '')->whereBetween('created_at', [$awal, $akhir]);
+        $penjualan = $data->get();
+        $total_orderan = $data->count();
+        $total_pembatalan = Penjualan::with('detail.produk')->withTrashed()->where('nama_customer', '!=', '')->whereBetween('created_at', [$awal, $akhir])->where('status', 3)->sum('total_harga');
+        $total_kembali = Penjualan::with('detail.produk')->where('nama_customer', '!=', '')->whereBetween('created_at', [$awal, $akhir])->where('status', '!=', 3)->sum('kembali');
+        $total_bayar = Penjualan::with('detail.produk')->where('nama_customer', '!=', '')->whereBetween('created_at', [$awal, $akhir])->where('status', '!=', 3)->sum('total_harga');
+        $total_terima = Penjualan::with('detail.produk')->where('nama_customer', '!=', '')->whereBetween('created_at', [$awal, $akhir])->where('status', '!=', 3)->sum('diterima');
+        $pemasukan_bersih = $total_terima - $total_kembali;
+        $pemasukan_kotor = $total_terima;
+        $pdf  = PDF::loadView('penjualan.pdf', compact('awal', 'akhir', 'penjualan', 'total_orderan', 'total_pembatalan', 'total_kembali', 'pemasukan_bersih', 'pemasukan_kotor'));
         $pdf->setPaper('a4', 'potrait');
 
-        return $pdf->download('Laporan-penjualan-'. date('Y-m-d-his') .'.pdf');
+        return $pdf->stream('Laporan-penjualan-'. date('Y-m-d-his') .'.pdf');
+        // return $total_kembali;
     }
 }
