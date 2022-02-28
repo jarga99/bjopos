@@ -81,7 +81,7 @@ class PenjualanController extends Controller
             })
             ->addColumn('aksi', function ($penjualan) {
                 $detail = '<button onclick="showDetail(`'. route('penjualan.show', $penjualan->id) .'`)" class="btn btn-xs btn-info btn-flat"><i class="fa fa-eye"></i></button>';
-                if($penjualan->status == 1) {
+                if($penjualan->status == 1 || $penjualan->status == 2) {
                     $edit = '<a href="'. route('transaksi.edit', $penjualan->id) .'" class="btn btn-xs btn-warning btn-flat"><i class="fa fa-pencil"></i></a>';
                     $delete = '<button onclick="deleteData(`'. route('penjualan.destroy', $penjualan->id) .'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button>';
                 } else {
@@ -300,7 +300,7 @@ class PenjualanController extends Controller
         $pdf  = PDF::loadView('penjualan.pdf', compact('awal', 'akhir', 'penjualan', 'total_orderan', 'total_pembatalan', 'total_kembali', 'pemasukan_bersih', 'pemasukan_kotor'));
         $pdf->setPaper('a4', 'potrait');
 
-        return $pdf->stream('Laporan-penjualan-'. date('Y-m-d-his') .'.pdf');
+        return $pdf->download('Laporan-penjualan-'. date('Y-m-d-his') .'.pdf');
         // return $total_kembali;
     }
 }
