@@ -130,8 +130,8 @@ class PenjualanController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nama_customer' => 'required',
-            'nomor_meja' => 'required'
-
+            'nomor_meja' => 'required',
+            'diterima' => 'required'
         ]);
 
         if ($validator->fails()) {

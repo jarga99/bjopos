@@ -258,7 +258,6 @@
                 if ($(this).val() == "") {
                     $(this).val(0).select();
                 }
-
                 loadForm($(this).val());
             });
 
