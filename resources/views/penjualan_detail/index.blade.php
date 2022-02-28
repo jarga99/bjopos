@@ -98,6 +98,7 @@
                                 <input type="hidden" name="total" id="total">
                                 <input type="hidden" name="total_item" id="total_item">
                                 <input type="hidden" name="bayar" id="bayar">
+                                <input type="hidden" name="kembali" id="kembali">
                                 <input type="hidden" name="modal_product" id="modal_product">
                                 <div class="form-group row">
                                     <label for="nama_customer" class="col-lg-4 control-label">Nama Customer</label>
@@ -140,7 +141,7 @@
                                 <div class="form-group row">
                                     <label for="kembali" class="col-lg-4 control-label">Kembali</label>
                                     <div class="col-lg-6">
-                                        <input type="text" id="kembali" name="kembali" class="form-control" value="0"
+                                        <input type="text" id="kembalirp" class="form-control" value="0"
                                             readonly>
                                     </div>
                                 </div>
@@ -350,8 +351,8 @@
                     $('#bayar').val(response.bayar);
                     $('.tampil-bayar').text('Bayar: Rp. ' + response.bayarrp);
                     $('.tampil-terbilang').text(response.terbilang);
-
-                    $('#kembali').val('Rp.' + response.kembalirp);
+                    $('#kembali').val(response.kembali);
+                    $('#kembalirp').val('Rp.' + response.kembalirp);
                     if ($('#diterima').val() != 0) {
                         $('.tampil-bayar').text('Kembali: Rp. ' + response.kembalirp);
                         $('.tampil-terbilang').text(response.kembali_terbilang);
