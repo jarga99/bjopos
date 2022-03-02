@@ -19,11 +19,13 @@ class DashboardController extends Controller
         $pembelian = Pembelian::count();
         $penjualan = Penjualan::count();
 
-        $tanggal_awal = date('Y-m-01');
+        $tanggal_awal = date('Y-m-d');
         $tanggal_akhir = date('Y-m-d');
 
+        // $total_penjualan = [];
+        // $data_pembelian = [];
         $data_tanggal = array();
-        $data_pendapatan = array();
+        // $data_pendapatan = array();
 
         while (strtotime($tanggal_awal) <= strtotime($tanggal_akhir)) {
             $data_tanggal[] = (int) substr($tanggal_awal, 8, 2);
@@ -31,14 +33,16 @@ class DashboardController extends Controller
             $total_penjualan = Penjualan::where('created_at', 'LIKE', "%$tanggal_awal%")->sum('bayar');
             $total_pembelian = Pembelian::where('created_at', 'LIKE', "%$tanggal_awal%")->sum('harga');
 
-            $pendapatan = $total_penjualan - $total_pembelian ;
-            $data_pendapatan[] += $pendapatan;
+            // $pendapatan = $total_penjualan - $total_pembelian ;
+            // $data_pendapatan[] += $pendapatan;
 
             $tanggal_awal = date('Y-m-d', strtotime("+1 day", strtotime($tanggal_awal)));
+            // $chart_penjualan = json_encode($total_penjualan);
+            // $chart_pembelian = json_encode($total_pembelian);
         }
 
         if (auth()->user()->level == 1) {
-            return view('admin.dashboard', compact('kategori', 'produk', 'pembelian', 'penjualan', 'tanggal_awal', 'tanggal_akhir', 'data_tanggal', 'data_pendapatan'));
+            return view('admin.dashboard', compact('kategori', 'produk', 'pembelian', 'penjualan', 'tanggal_awal', 'tanggal_akhir', 'data_tanggal', 'total_penjualan', 'total_pembelian'));
         } elseif(auth()->user()->level == 2) {
             return view('kasir.dashboard');
         } else {

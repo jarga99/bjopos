@@ -106,34 +106,37 @@
 <!-- ChartJS -->
 <script src="{{ asset('AdminLTE-2/bower_components/chart.js/Chart.js') }}"></script>
 <script>
-$(function() {
-    // Get context with jQuery - using jQuery's .get() method.
-    var salesChartCanvas = $('#salesChart').get(0).getContext('2d');
-    // This will get the first returned node in the jQuery collection.
-    var salesChart = new Chart(salesChartCanvas);
-
-    var salesChartData = {
-        labels: {{ json_encode($data_tanggal) }},
-        datasets: [
-            {
-                label: 'Pendapatan',
-                fillColor           : 'rgba(60,141,188,0.9)',
-                strokeColor         : 'rgba(60,141,188,0.8)',
-                pointColor          : '#3b8bba',
-                pointStrokeColor    : 'rgba(60,141,188,1)',
-                pointHighlightFill  : '#fff',
-                pointHighlightStroke: 'rgba(60,141,188,1)',
-                data: {{ json_encode($data_pendapatan) }}
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    var data_penjualan = JSON.parse(`<?php echo $total_penjualan; ?>`);
+    var data_pembelian = JSON.parse(`<?php echo $total_pembelian; ?>`);
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Penjualan', 'Pembelian'],
+            datasets: [{
+                label: 'Rp. ',
+                data: [
+                    data_penjualan,
+                    data_pembelian
+                ],
+                backgroundColor: [
+                    '#0000FF',
+                    '#FF0000'
+                ],
+                borderColor: [
+                    '#0000FF',
+                    '#FF0000'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
             }
-        ]
-    };
-
-    var salesChartOptions = {
-        pointDot : false,
-        responsive : true
-    };
-
-    salesChart.Line(salesChartData, salesChartOptions);
-});
-</script>
+        }
+    });
+    </script>
 @endpush

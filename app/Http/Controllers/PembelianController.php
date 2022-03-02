@@ -13,9 +13,16 @@ class PembelianController extends Controller
         return view('pembelian.index');
     }
 
-    public function data()
+    public function data(Request $request)
     {
-        $pembelian = Pembelian::orderBy('id', 'asc')->get();
+        $pembelian = Pembelian::orderBy('id', 'asc');
+
+        if($request->tanggal_awal != null && $request->tanggal_akhir != null) {
+            $pembelian->whereBetween('created_at', [$request->tanggal_awal, $request->tanggal_akhir]);
+        }
+
+        $pembelian = $pembelian->get();
+        
         return datatables()
             ->of($pembelian)
             ->addIndexColumn()

@@ -1,7 +1,8 @@
 @extends('layouts.master')
 
 @section('title')
-    Daftar Penjualan {{ \Carbon\Carbon::parse($tanggalAwal)->format('d F Y') }} - {{ \Carbon\Carbon::parse($tanggalAkhir)->format('d F Y') }}
+    {{-- Daftar Penjualan {{ \Carbon\Carbon::parse($tanggalAwal)->format('d F Y') }} - {{ \Carbon\Carbon::parse($tanggalAkhir)->format('d F Y') }} --}}
+    Daftar Penjualan
 @endsection
 
 @push('css')
